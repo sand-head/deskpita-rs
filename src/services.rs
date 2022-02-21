@@ -28,7 +28,7 @@ pub async fn sync_fan_speed_with_cpu_temp(port: &mut SerialStream) -> anyhow::Re
 
     let mut new_speed = 0;
     for (temp, speed) in data.iter() {
-      if *temp >= cpu_temp {
+      if cpu_temp >= *temp {
         new_speed = *speed;
         break;
       }
