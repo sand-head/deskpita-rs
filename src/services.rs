@@ -2,7 +2,10 @@ use std::{collections::HashMap, sync::Mutex, time::Duration};
 
 use clap::Subcommand;
 use once_cell::sync::Lazy;
-use tokio::{fs::File, io::AsyncReadExt};
+use tokio::{
+  fs::File,
+  io::{AsyncReadExt, AsyncWriteExt},
+};
 use tokio_serial::SerialStream;
 
 use crate::fan;
@@ -19,6 +22,7 @@ static GLOBAL_DATA: Lazy<Mutex<HashMap<i32, i32>>> = Lazy::new(|| {
 #[derive(Subcommand, Debug)]
 pub enum ServiceCommands {
   AutoFan,
+  PowerOff,
 }
 
 pub async fn sync_fan_speed_with_cpu_temp(port: &mut SerialStream) -> anyhow::Result<()> {
@@ -38,6 +42,11 @@ pub async fn sync_fan_speed_with_cpu_temp(port: &mut SerialStream) -> anyhow::Re
     fan::set_fan_speed(port, new_speed).await?;
     tokio::time::sleep(Duration::from_secs(10)).await;
   }
+}
+
+pub async fn send_power_off(port: &mut SerialStream) -> anyhow::Result<()> {
+  port.write(b"power_off").await?;
+  Ok(())
 }
 
 async fn get_cpu_temp() -> anyhow::Result<i32> {
