@@ -1,10 +1,14 @@
 use clap::{Parser, Subcommand};
+use services::ServiceCommands;
 use tokio::io::AsyncWriteExt;
 use tokio_serial::SerialPortBuilderExt;
 
+mod fan;
+mod services;
+
 const DEFAULT_TTY: &str = "/dev/ttyUSB0";
 
-/// Services for controlling the DeskPi Pro
+/// Services for controlling the DeskPi Pro.
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 #[clap(propagate_version = true)]
@@ -15,21 +19,37 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-  /// Control the DeskPi Pro's CPU fan speed
-  Fan { speed: Option<i32> },
+  /// Handles various services.
+  Service {
+    #[clap(subcommand)]
+    service: ServiceCommands,
+  },
+  /// Control the DeskPi Pro's CPU fan speed.
+  Fan {
+    /// Sets the fan speed to the given percentage.
+    /// If unset, the speed will be determined by the CPU temperature.
+    #[clap(short, long)]
+    speed: Option<i32>,
+  },
 }
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
   let cli = Cli::parse();
-  let mut port = tokio_serial::new(DEFAULT_TTY, 9699).open_native_async()?;
+  let mut port = tokio_serial::new(DEFAULT_TTY, 9600).open_native_async()?;
 
   match &cli.command {
+    Commands::Service { service } => match &service {
+      ServiceCommands::AutoFan => services::sync_fan_speed_with_cpu_temp(&mut port).await?,
+    },
     Commands::Fan { speed } => {
-      // todo: automagically control fan speed based on CPU temp
       if let Some(speed) = speed {
-        let speed_msg = format!("pwm_{:03}", speed);
-        port.write(speed_msg.as_bytes()).await?;
+        fan::set_fan_speed(&mut port, *speed).await?;
+      } else {
+        // automagically control fan speed based on CPU temp
+        // this requires starting a service that polls the CPU temp
+        // and sets the fan speed accordingly
+        todo!();
       }
     }
   }

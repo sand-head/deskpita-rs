@@ -3,7 +3,9 @@ Description=DeskPita fan control service
 After=multi-user.target
 
 [Service]
-ExecStart=sudo /usr/bin/deskpita
+Type=simple
+ExecStart=sudo /usr/bin/deskpita service auto-fan
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
