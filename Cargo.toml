@@ -1,7 +1,19 @@
 [package]
 name = "deskpita"
 version = "0.1.0"
+authors = ["Justin Schweigert <justin@schweigert.dev>"]
 edition = "2021"
+
+[package.metadata.deb]
+depends = "$auto, systemd"
+extended-description = "Services for controlling the DeskPi Pro for the Raspberry Pi 4"
+section = "electronics"
+priority = "optional"
+assets = [
+    ["target/release/deskpita", "usr/bin/deskpita", "755"],
+    ["debian/deskpita.service", "/lib/systemd/system/deskpita.service", "644"],
+]
+maintainer-scripts = "debian/scripts"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
