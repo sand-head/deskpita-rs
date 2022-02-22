@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=sudo /usr/bin/deskpita service auto-fan
+ExecStart=sudo /usr/bin/deskpita service fan
 Restart=always
 
 [Install]

@@ -11,7 +11,8 @@ section = "electronics"
 priority = "optional"
 assets = [
     ["target/release/deskpita", "usr/bin/deskpita", "755"],
-    ["debian/deskpita.service", "/lib/systemd/system/deskpita.service", "644"],
+    ["debian/deskpita-fan.service", "/lib/systemd/system/deskpita-fan.service", "644"],
+    ["debian/deskpita-shutdown.service", "/lib/systemd/system/deskpita-shutdown.service", "644"],
 ]
 maintainer-scripts = "debian/scripts"
 

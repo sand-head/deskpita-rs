@@ -22,7 +22,9 @@ static GLOBAL_DATA: Lazy<Mutex<HashMap<i32, i32>>> = Lazy::new(|| {
 
 #[derive(Subcommand, Debug)]
 pub enum ServiceCommands {
-  AutoFan,
+  /// Automatically sets the fan speed, depending on the current settings.
+  Fan,
+  /// Sends a "power off" command to the DeskPi Pro.
   PowerOff,
 }
 

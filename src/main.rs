@@ -39,7 +39,7 @@ async fn main() -> anyhow::Result<()> {
 
   match &cli.command {
     Commands::Service { service } => match &service {
-      ServiceCommands::AutoFan => services::sync_fan_speed_with_cpu_temp(&mut port).await?,
+      ServiceCommands::Fan => services::sync_fan_speed_with_cpu_temp(&mut port).await?,
       ServiceCommands::PowerOff => services::send_power_off(&mut port).await?,
     },
     Commands::Fan { speed } => {

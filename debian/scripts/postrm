@@ -8,6 +8,7 @@ fi
 
 if [ "$1" = "remove" ]; then
 	if [ -x "/usr/bin/deb-systemd-helper" ]; then
-		deb-systemd-helper mask deskpita.service >/dev/null
+		deb-systemd-helper mask deskpita-fan.service >/dev/null
+		deb-systemd-helper mask deskpita-shutdown.service >/dev/null
 	fi
 fi

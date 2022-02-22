@@ -1,3 +1,4 @@
 #!/bin/sh
 
-deb-systemd-invoke stop deskpita.service
+deb-systemd-invoke stop deskpita-fan.service
+deb-systemd-invoke stop deskpita-shutdown.service

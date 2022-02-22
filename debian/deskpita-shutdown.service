@@ -1,0 +1,13 @@
+[Unit]
+Description=DeskPita shutdown service
+Conflicts=restart.target
+Before=halt.target shutdown.target poweroff.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=sudo /usr/bin/deskpita service power-off
+RemainAfterExit=yes
+
+[Install]
+WantedBy=halt.target shutdown.target poweroff.target

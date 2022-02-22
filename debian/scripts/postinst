@@ -1,17 +1,30 @@
 #!/bin/sh
 
 ## This will only remove masks created by d-s-h on package removal.
-deb-systemd-helper unmask deskpita.service > /dev/null || true
+deb-systemd-helper unmask deskpita-fan.service > /dev/null || true
+deb-systemd-helper unmask deskpita-shutdown.service > /dev/null || true
 
 # was-enabled defaults to true, so new installations run enable.
-if deb-systemd-helper --quiet was-enabled deskpita.service
+if deb-systemd-helper --quiet was-enabled deskpita-fan.service
 then
 	# Enables the unit on first installation, creates new
 	# symlinks on upgrades if the unit file has changed.
-	deb-systemd-helper enable deskpita.service > /dev/null || true
-	deb-systemd-invoke start deskpita.service
+	deb-systemd-helper enable deskpita-fan.service > /dev/null || true
+	deb-systemd-invoke start deskpita-fan.service
 else
 	# Update the statefile to add new symlinks (if any), which need to be
 	# cleaned up on purge. Also remove old symlinks.
-	deb-systemd-helper update-state deskpita.service > /dev/null || true
+	deb-systemd-helper update-state deskpita-fan.service > /dev/null || true
+fi
+
+if deb-systemd-helper --quiet was-enabled deskpita-shutdown.service
+then
+	# Enables the unit on first installation, creates new
+	# symlinks on upgrades if the unit file has changed.
+	deb-systemd-helper enable deskpita-shutdown.service > /dev/null || true
+	deb-systemd-invoke start deskpita-shutdown.service
+else
+	# Update the statefile to add new symlinks (if any), which need to be
+	# cleaned up on purge. Also remove old symlinks.
+	deb-systemd-helper update-state deskpita-shutdown.service > /dev/null || true
 fi
